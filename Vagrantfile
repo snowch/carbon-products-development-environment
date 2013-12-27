@@ -18,4 +18,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", path: "openstack_setup.sh"
   config.vm.provision "shell", path: "desktop_setup.sh"
   config.vm.provision "shell", path: "stratos_developer_setup.sh"
+  config.vm.provision "shell", inline: "sudo reboot"
+
 end
