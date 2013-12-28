@@ -79,7 +79,7 @@ cat << EOF > /home/vagrant/Desktop/eclipse.desktop
 Type=Application
 Name=Eclipse
 Comment=Eclipse Integrated Development Environment
-Icon=eclipse
+Icon=/home/vagrant/eclipse/icon.xpm
 Exec=/home/vagrant/eclipse/eclipse -data /home/vagrant/workspace
 Terminal=false
 Categories=Development;IDE;Java;
