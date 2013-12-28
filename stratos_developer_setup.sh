@@ -31,7 +31,7 @@ yum install -y java-1.7.0-openjdk-devel git
 
 wget http://mirrors.gigenet.com/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz
 su -c "tar -zxvf apache-maven-3.0.5-bin.tar.gz -C /opt/" 
-rm /root/apache-maven-3.0.5-bin.tar.gz
+rm -f apache-maven-3.0.5-bin.tar.gz
 
 cat << EOF > /etc/profile.d/maven.sh
 export M2_HOME=/opt/apache-maven-3.0.5

@@ -25,6 +25,9 @@
 # Vagrantfile API/syntax version. 
 VAGRANTFILE_API_VERSION = "2"
 
+# whether or not to install X Windows and eclipse
+INSTALL_DESKTOP=true
+
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
@@ -37,7 +40,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision "shell", path: "openstack_setup.sh"
-  config.vm.provision "shell", path: "desktop_setup.sh"
+
+  if INSTALL_DESKTOP
+     config.vm.provision "shell", path: "desktop_setup.sh"
+  end
+
   config.vm.provision "shell", path: "stratos_developer_setup.sh"
   config.vm.provision "shell", inline: "sudo reboot"
 

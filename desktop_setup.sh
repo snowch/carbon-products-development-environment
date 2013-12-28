@@ -24,7 +24,7 @@ set -e
 set -x
 
 yum groupinstall -y "X Window System" Desktop
-yum install -y firefox
+yum install -y firefox dkms
 cp /etc/inittab /etc/inittab.bak 
 sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
 
@@ -35,11 +35,15 @@ sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
 wget http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/technology/epp/downloads/release/luna/M4/eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz
 su -c "tar -zxvf eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz -C /home/vagrant/"
 chown -R vagrant:vagrant /home/vagrant/eclipse
-rm /root/eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz
+rm -f eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz
+
+mkdir /home/vagrant/Desktop
+chown vagrant:vagrant /home/vagrant/Desktop
 
 ##############################
 # Openstack dashboard launcher
 ##############################
+
 
 cat << EOF > /home/vagrant/Desktop/openstack.desktop
 #!/usr/bin/env xdg-open
