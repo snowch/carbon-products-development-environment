@@ -32,10 +32,9 @@ sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
 # setup eclipse
 ###############
 
-wget http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/technology/epp/downloads/release/luna/M4/eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz
-su -c "tar -zxvf eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz -C /home/vagrant/"
+wget -nv -c -P /vagrant/downloads/ http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/technology/epp/downloads/release/luna/M4/eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz
+su -c "tar -zxvf /vagrant/downloads/eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz -C /home/vagrant/"
 chown -R vagrant:vagrant /home/vagrant/eclipse
-rm -f eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz
 
 mkdir /home/vagrant/Desktop
 chown vagrant:vagrant /home/vagrant/Desktop
