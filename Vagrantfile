@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # PROVISIONING
   ##############
   
-  config.vm.provision "shell", path: "scripts/create_downloads_folder.sh"
+  config.vm.provision "shell", path: "scripts/create_folders.sh"
   config.vm.provision "shell", path: "scripts/openstack_setup.sh"
   config.vm.provision "shell", path: "scripts/maven_setup.sh"
 

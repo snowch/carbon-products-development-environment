@@ -23,7 +23,16 @@
 set -e
 set -x
 
-if [ ! -d /vagrant/downloads ]
-then
-   mkdir /vagrant/downloads
-fi
+DIRS=(
+  /vagrant/downloads
+  /vagrant/log
+)
+
+for item in ${DIRS[*]}
+do
+   if [ ! -d $item ]
+   then
+      mkdir $item
+   fi
+done
+
