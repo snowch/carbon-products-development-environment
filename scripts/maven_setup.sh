@@ -23,13 +23,18 @@
 set -e
 set -x
 
-sudo yum install -y http://rdo.fedorapeople.org/rdo-release.rpm
-sudo yum install -y openstack-packstack expect
+MAVEN_DOWNLOAD_URL=http://www.mirrorservice.org/sites/ftp.apache.org/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz
 
-expect << EOF
-set timeout -1
-spawn "/usr/bin/packstack" "--allinone"
-expect "Setting up ssh keys...root@10.0.2.15's password:"
-send "vagrant\n"
-expect eof
+
+if [ ! -d /opt/apache-maven-3.0.5 ]
+then
+   wget -nv -c -P /vagrant/downloads/ $MAVEN_DOWNLOAD_URL
+   su -c "tar -zxvf /vagrant/downloads/apache-maven-3.0.5-bin.tar.gz -C /opt/" 
+fi
+
+cat << EOF > /etc/profile.d/maven.sh
+export M2_HOME=/opt/apache-maven-3.0.5
+export M2=\$M2_HOME/bin
+export PATH=$M2:$PATH
 EOF
+

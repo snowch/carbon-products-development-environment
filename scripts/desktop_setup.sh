@@ -23,6 +23,15 @@
 set -e
 set -x
 
+if [ -f /etc/desktop_provisioned_date ]
+then
+   exit 0
+fi
+
+#################
+# Install desktop
+#################
+
 yum groupinstall -y "X Window System" Desktop
 yum install -y firefox dkms
 cp /etc/inittab /etc/inittab.bak 
@@ -86,3 +95,8 @@ EOF
 
 chown vagrant:vagrant /home/vagrant/Desktop/eclipse.desktop
 chmod 770 /home/vagrant/Desktop/eclipse.desktop
+
+######
+
+date > /etc/desktop_provisioned_date
+

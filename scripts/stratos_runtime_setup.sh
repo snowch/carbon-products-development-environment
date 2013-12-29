@@ -41,17 +41,18 @@ PRODUCTS=(
 )
 
 # mkdir if it doesn't exist
-[ -d ${STRATOS_PACK_DIR} ] || mkdir $STRATOS_PACK_DIR
+if [ ! -d ${STRATOS_PACK_DIR} ]
+then
+   mkdir $STRATOS_PACK_DIR
+fi
+
+wget -nv -c -P /vagrant/downloads/ http://dist.wso2.org/downloads/message-broker/2.1.0/rc1/wso2mb-2.1.0.zip 
+
+unzip /vagrant/downloads/wso2mb-2.1.0.zip -d $STRATOS_PACK_DIR
 
 for item in ${PRODUCTS[*]}
 do
-   cp ${PROD_DIR}${item} ${STRATOS_PACK_DIR} 
+   unzip ${PROD_DIR}${item} -d $STRATOS_PACK_DIR
 done
-
-wget -nv -c -P /vagrant/downloads/ http://dist.wso2.org/downloads/message-broker/2.1.0/rc1/wso2mb-2.1.0.zip 
-pushd `pwd`
-cd $STRATOS_PACK_DIR
-unzip /vagrant/downloads/wso2mb-2.1.0.zip
-popd
 
 chown -R vagrant:vagrant $STRATOS_PACK_DIR
