@@ -32,7 +32,7 @@ fi
 # Install desktop
 #################
 
-yum groupinstall -y "X Window System" Desktop
+#yum groupinstall -y "X Window System" Desktop
 yum install -y firefox dkms xrdp
 cp /etc/inittab /etc/inittab.bak 
 sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
