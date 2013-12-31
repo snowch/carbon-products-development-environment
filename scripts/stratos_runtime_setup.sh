@@ -23,6 +23,12 @@
 set -e
 set -x
 
+if [ -f /etc/stratos_runtime_provisioned_date ]
+then
+   exit 0
+fi
+
+
 # stratos version
 STRATOS_VERSION=4.0.0-SNAPSHOT
 
@@ -56,3 +62,5 @@ do
 done
 
 chown -R vagrant:vagrant $STRATOS_PACK_DIR
+
+date > /etc/stratos_runtime_provisioned_date

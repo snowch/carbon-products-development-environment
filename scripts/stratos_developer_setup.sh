@@ -25,6 +25,12 @@
 set -e
 set -x
 
+if [ -f /etc/stratos_developer_provisioned_date ]
+then
+   exit 0
+fi
+
+
 STRATOS_SRC=/home/vagrant/incubator-stratos
 
 MAVEN_SETTINGS=/vagrant/maven_settings.xml
@@ -54,20 +60,6 @@ echo "built distributions after first build ..."
 
 find incubator-stratos/products/ -name *.zip | grep distribution
 
-######################################################
-# FIXME
-# hack to build cloud controller distribution
-# https://github.com/snowch/vagrant-packstack/issues/1 
-######################################################
-
-sudo -i -u vagrant \
-   $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
-   -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_clean_install2.log install
-
-echo "built distributions after second build ..."
-
-find incubator-stratos/products/ -name *.zip | grep distribution
 
 #####################
 # maven eclipse setup
@@ -77,3 +69,28 @@ sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/stratos_mvn_eclipse_eclipse.log eclipse:eclipse
+
+echo "built distributions after first build ..."
+
+find incubator-stratos/products/ -name *.zip | grep distribution
+
+######################################################
+# FIXME
+# hack to build cloud controller distribution
+# https://github.com/snowch/vagrant-packstack/issues/1 
+# 
+# we could probably build a lot less than we are,
+# maybe just the cc distrib needs rebuilding?
+######################################################
+
+sudo -i -u vagrant \
+   $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
+   -s $MAVEN_SETTINGS \
+   -l /vagrant/log/stratos_mvn_install.log install
+
+echo "built distributions after second build ..."
+
+find incubator-stratos/products/ -name *.zip | grep distribution
+
+
+date > /etc/stratos_developer_provisioned_date 

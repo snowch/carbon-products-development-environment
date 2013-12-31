@@ -26,8 +26,17 @@
 VAGRANTFILE_API_VERSION = "2"
 
 # whether or not to install X Windows and eclipse
-INSTALL_DESKTOP=true
+INSTALL_DESKTOP=false
 
+# by default the Virtualbox guest UI is disabled
+# can be enabled on with the vagrant up command: 
+# $ VB_GUI=true vagrant up
+VB_GUI=false
+
+if ENV["VB_GUI"] == "true" then VB_GUI = true
+else
+   puts("[info] VB_GUI environment variable not set so running headless") 
+end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -39,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
 
   config.vm.provider :virtualbox do |vb|
-     vb.gui = true
+     vb.gui = VB_GUI
      vb.customize ["modifyvm", :id, "--memory", "5120"]
   end
  
@@ -71,7 +80,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", path: "scripts/maven_setup.sh"
 
   if INSTALL_DESKTOP
-     config.vm.provision "shell", path: "scripts/desktop_setup.sh"
+#     config.vm.provision "shell", path: "scripts/desktop_setup.sh"
   end
 
   config.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
