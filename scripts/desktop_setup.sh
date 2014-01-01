@@ -34,9 +34,39 @@ fi
 #################
 
 yum groupinstall -y "X Window System" Desktop
-yum install -y firefox dkms xrdp
-cp /etc/inittab /etc/inittab.bak 
-sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
+yum install -y firefox 
+
+#cp /etc/inittab /etc/inittab.bak 
+#sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
+
+yum install -y tigervnc-server libtool automake \
+   gcc openssl-devel pam-devel libX11-devel libXfixes-devel 
+
+wget http://downloads.sourceforge.net/project/xrdp/xrdp/0.6.1/xrdp-v0.6.1.tar.gz
+
+rm -rf xrdp-v0.6.1 # clean up from previous runs
+tar -zxvf xrdp-v0.6.1.tar.gz
+rm -f xrdp-v0.6.1.tar.gz
+cd xrdp-v0.6.1
+./bootstrap
+./configure
+make
+make install
+cp -f /etc/xrdp/xrdp.sh /etc/init.d/
+/sbin/chkconfig --add xrdp.sh
+service xrdp.sh restart
+
+# TODO set /etc/xrdp/xrdp.ini
+# [xrdp1]
+# ...
+# username=vagrant
+# password=vagrant
+# ...
+
+iptables -I INPUT 1 -p tcp --dport 3389 -j ACCEPT
+iptables-save | sudo tee /etc/sysconfig/iptables
+service iptables restart
+
 
 ###############
 # setup eclipse

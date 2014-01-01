@@ -25,77 +25,75 @@
 # Vagrantfile API/syntax version. 
 VAGRANTFILE_API_VERSION = "2"
 
-# whether or not to install X Windows and eclipse
-INSTALL_DESKTOP=true
-
-# by default the Virtualbox guest UI is disabled
-# can be enabled on with the vagrant up command: 
-# $ VB_GUI=true vagrant up
-VB_GUI=false
-
-if ENV["VB_GUI"] == "true" then VB_GUI = true
-else
-   puts("[info] VB_GUI environment variable not set so running headless") 
-end
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-#  config.proxy.http     = "http://192.168.1.79:3128/"
-#  config.proxy.https    = "http://192.168.1.79:3128/"
-#  config.proxy.no_proxy = "localhost,127.0.0.1"
-  
   config.vm.box = "centos64"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
 
-  config.vm.network "private_network", ip: "192.168.55.10"
-  config.vm.network "forwarded_port", guest: 3389, host: 4489
-
-  config.vm.provider :virtualbox do |vb|
-     vb.gui = VB_GUI
-     vb.customize ["modifyvm", :id, "--memory", "5120"]
-  end
- 
-  #####################
-  # Maven synced folder
-  #####################
-
-  config.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
-	"/home/vagrant/.m2/", 
-        :create => true,
-	:mount_option => "dmode=777,fmode=666"
-
-  # hack to stop vm growing past disk size
-  # FIXME: create a new base image with sufficient space
- 
-  config.vm.synced_folder "./stratos_installer",
-	"/home/vagrant/stratos/", 
-        :create => true,
-	:mount_option => "dmode=777,fmode=666"
+  #config.vm.network "private_network", ip: "192.168.55.10"
+  config.vm.network "forwarded_port", guest: 3389, host: 4480
 
   ###############
   # PLUGIN CONFIG
   ###############
 
-  # vbguest : https://github.com/dotless-de/vagrant-vbguest
-  config.vbguest.auto_update = true
-
+  # These vm's download lots of packages, so caching can improve
+  # performance when creating new machines.
+  #
   # vagrant-cachier : https://github.com/fgrehm/vagrant-cachier
   config.cache.auto_detect = true
 
-  ##############
-  # PROVISIONING
-  ##############
-  
-  config.vm.provision "shell", path: "scripts/create_folders.sh"
-  config.vm.provision "shell", path: "scripts/openstack_setup.sh"
-  config.vm.provision "shell", path: "scripts/maven_setup.sh"
-  config.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
-  config.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
+  # vbguest : https://github.com/dotless-de/vagrant-vbguest
+  config.vbguest.auto_update = true
 
-  if INSTALL_DESKTOP
-     config.vm.provision "shell", path: "scripts/desktop_setup.sh"
+  ###########################################
+  #
+  # Openstack machine
+  #
+  ###########################################
+
+  config.vm.define "openstack" do |openstack|
+
+     openstack.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", "2048"]
+     end
+     openstack.vm.provision "shell", path: "scripts/openstack_setup.sh"
+
   end
 
-  #config.vm.provision "shell", inline: "sudo reboot"
+
+  config.vm.define "stratosdev" do |stratosdev|
+
+    # May need to set this if UI takes a long time booting
+    #config.vm.boot_timeout = xx
+
+     stratosdev.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", "2048"]
+        vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+     end
+
+     # Maven synced folder 
+
+     stratosdev.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
+	"/home/vagrant/.m2/", 
+        :create => true,
+	:mount_option => "dmode=777,fmode=666"
+
+     stratosdev.vm.provision "shell", path: "scripts/create_folders.sh"
+     stratosdev.vm.provision "shell", path: "scripts/maven_setup.sh"
+     stratosdev.vm.provision "shell", path: "scripts/desktop_setup.sh"
+     stratosdev.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
+     # TODO : restart?
+  end
+
+  config.vm.define "stratosruntime" do |stratosruntime|
+ 
+     #config.vm.synced_folder "./stratos_installer",
+#	"/home/vagrant/stratos/", 
+#        :create => true,
+#	:mount_option => "dmode=777,fmode=666"
+
+     #stratosruntime.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
+  end
 
 end
