@@ -31,6 +31,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
 
   #config.vm.network "private_network", ip: "192.168.55.10"
+
+  # The host machine can use Remote Desktop Connection (windows) or
+  # rdesktop (linux/osx) to connect to localhost:4480 the username
+  # and password is vagrant/vagrant
+
   config.vm.network "forwarded_port", guest: 3389, host: 4480
 
   ###############
@@ -41,9 +46,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # performance when creating new machines.
   #
   # vagrant-cachier : https://github.com/fgrehm/vagrant-cachier
+
   config.cache.auto_detect = true
 
+  # Use the vbguest plugin to keep the guest os virtualbox utils
+  # in line with the host's virtualbox version
+  #
   # vbguest : https://github.com/dotless-de/vagrant-vbguest
+
   config.vbguest.auto_update = true
 
   ###########################################
