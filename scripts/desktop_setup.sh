@@ -33,7 +33,7 @@ fi
 # Install desktop
 #################
 
-yum groupinstall -y "X Window System" Desktop
+yum -y groupinstall "Desktop" "Desktop Platform" "X Window System" "Fonts"
 yum install -y firefox 
 
 #cp /etc/inittab /etc/inittab.bak 
