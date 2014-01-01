@@ -25,6 +25,7 @@ set -x
 
 if [ -f /etc/openstack_provisioned_date ]
 then
+   echo "Openstack already provisioned so exiting."
    exit 0 
 fi
 

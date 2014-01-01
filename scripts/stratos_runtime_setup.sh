@@ -25,9 +25,9 @@ set -x
 
 if [ -f /etc/stratos_runtime_provisioned_date ]
 then
+   echo "Stratos runtime already provisioned so exiting."
    exit 0
 fi
-
 
 # stratos version
 STRATOS_VERSION=4.0.0-SNAPSHOT
@@ -36,7 +36,7 @@ STRATOS_VERSION=4.0.0-SNAPSHOT
 PROD_DIR=/home/vagrant/incubator-stratos/products/
 
 # the stratos installer folder
-STRATOS_PACK_DIR=/home/vagrant/stratos_installer
+STRATOS_PACK_DIR=/home/vagrant/stratos
 
 PRODUCTS=(
    cloud-controller/modules/distribution/target/apache-stratos-cc-${STRATOS_VERSION}.zip
@@ -51,6 +51,9 @@ if [ ! -d ${STRATOS_PACK_DIR} ]
 then
    mkdir $STRATOS_PACK_DIR
 fi
+
+# remove any previous files 
+rm -rf $STRATOS_PACK_DIR/*
 
 wget -nv -c -P /vagrant/downloads/ http://dist.wso2.org/downloads/message-broker/2.1.0/rc1/wso2mb-2.1.0.zip 
 

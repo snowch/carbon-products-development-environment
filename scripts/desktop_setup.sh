@@ -25,6 +25,7 @@ set -x
 
 if [ -f /etc/desktop_provisioned_date ]
 then
+   echo "Desktop already provisioned so exiting."
    exit 0
 fi
 
@@ -32,7 +33,7 @@ fi
 # Install desktop
 #################
 
-#yum groupinstall -y "X Window System" Desktop
+yum groupinstall -y "X Window System" Desktop
 yum install -y firefox dkms xrdp
 cp /etc/inittab /etc/inittab.bak 
 sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
@@ -45,7 +46,10 @@ wget -nv -c -P /vagrant/downloads/ http://www.mirrorservice.org/sites/download.e
 su -c "tar -zxvf /vagrant/downloads/eclipse-jee-luna-M4-linux-gtk-x86_64.tar.gz -C /home/vagrant/"
 chown -R vagrant:vagrant /home/vagrant/eclipse
 
-mkdir /home/vagrant/Desktop
+if [ ! -d /home/vagrant/Desktop ]
+then
+   mkdir /home/vagrant/Desktop
+fi
 chown vagrant:vagrant /home/vagrant/Desktop
 
 ##############################

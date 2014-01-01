@@ -48,6 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
 
   config.vm.network "private_network", ip: "192.168.55.10"
+  config.vm.network "forwarded_port", guest: 3389, host: 4489
 
   config.vm.provider :virtualbox do |vb|
      vb.gui = VB_GUI
@@ -63,12 +64,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         :create => true,
 	:mount_option => "dmode=777,fmode=666"
 
+  # hack to stop vm growing past disk size
+  # FIXME: create a new base image with sufficient space
+ 
+  config.vm.synced_folder "./stratos_installer",
+	"/home/vagrant/stratos/", 
+        :create => true,
+	:mount_option => "dmode=777,fmode=666"
+
   ###############
   # PLUGIN CONFIG
   ###############
 
   # vbguest : https://github.com/dotless-de/vagrant-vbguest
-  config.vbguest.auto_update = false
+  config.vbguest.auto_update = true
 
   # vagrant-cachier : https://github.com/fgrehm/vagrant-cachier
   config.cache.auto_detect = true
@@ -80,13 +89,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", path: "scripts/create_folders.sh"
   config.vm.provision "shell", path: "scripts/openstack_setup.sh"
   config.vm.provision "shell", path: "scripts/maven_setup.sh"
+  config.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
+  config.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
 
   if INSTALL_DESKTOP
      config.vm.provision "shell", path: "scripts/desktop_setup.sh"
   end
 
-  config.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
-  config.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
-  config.vm.provision "shell", inline: "sudo reboot"
+  #config.vm.provision "shell", inline: "sudo reboot"
 
 end

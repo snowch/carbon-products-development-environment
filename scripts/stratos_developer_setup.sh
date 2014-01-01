@@ -20,16 +20,14 @@
 #
 # --------------------------------------------------------------
 
-# Note: this script should be idempotent
-
 set -e
 set -x
 
 if [ -f /etc/stratos_developer_provisioned_date ]
 then
+   echo "Stratos developer already provisioned so exiting."
    exit 0
 fi
-
 
 STRATOS_SRC=/home/vagrant/incubator-stratos
 
@@ -65,10 +63,30 @@ find incubator-stratos/products/ -name *.zip | grep distribution
 # maven eclipse setup
 #####################
 
+# create eclipse workspace
+
+SETTINGS_DIR=/home/vagrant/workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/
+
+sudo -i -u vagrant mkdir -p $SETTINGS_DIR
+
+sudo -i -u vagrant touch $SETTINGS_DIR/org.eclipse.jdt.core.prefs
+
+
+# perform mvn eclipse:eclipse
+
 sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_eclipse_eclipse.log eclipse:eclipse
+   -l /vagrant/log/stratos_mvn_eclipse_eclipse.log \
+   -Declipse.projectDir=/home/vagrant/workspace/ \
+   eclipse:eclipse 
+
+sudo -i -u vagrant \
+   $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
+   -s $MAVEN_SETTINGS \
+   -l /vagrant/log/stratos_mvn_eclipse_configure_workspace.log \
+   -Declipse.workspace=/home/vagrant/workspace/ \
+   eclipse:configure-workspace
 
 echo "built distributions after first build ..."
 
@@ -78,13 +96,11 @@ find incubator-stratos/products/ -name *.zip | grep distribution
 # FIXME
 # hack to build cloud controller distribution
 # https://github.com/snowch/vagrant-packstack/issues/1 
-# 
-# we could probably build a lot less than we are,
-# maybe just the cc distrib needs rebuilding?
 ######################################################
 
 sudo -i -u vagrant \
-   $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
+   $M2_HOME/bin/mvn -B \
+   -f $STRATOS_SRC/products/cloud-controller/modules/distribution/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/stratos_mvn_install.log install
 
