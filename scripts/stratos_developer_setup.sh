@@ -20,6 +20,9 @@
 #
 # --------------------------------------------------------------
 
+# This script depends on eclipse being installed to 
+# /home/vagrant/eclipse
+
 set -e
 set -x
 
@@ -42,7 +45,7 @@ yum install -y git java-1.7.0-openjdk-devel
 if [ -d $STRATOS_SRC ]; 
 then
    # TODO should we do an update
-   echo 'Found stratos src folder.  Not updating.'
+   echo 'Found stratos src folder.  Not updating git.'
 else
    sudo -i -u vagrant \
       git clone https://git-wip-us.apache.org/repos/asf/incubator-stratos.git \
@@ -63,23 +66,43 @@ find incubator-stratos/products/ -name *.zip | grep distribution
 # maven eclipse setup
 #####################
 
-# create eclipse workspace
-
-SETTINGS_DIR=/home/vagrant/workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/
-
-sudo -i -u vagrant mkdir -p $SETTINGS_DIR
-
-sudo -i -u vagrant touch $SETTINGS_DIR/org.eclipse.jdt.core.prefs
-
-
 # perform mvn eclipse:eclipse
 
 sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/stratos_mvn_eclipse_eclipse.log \
-   -Declipse.projectDir=/home/vagrant/workspace/ \
    eclipse:eclipse 
+
+# we need an eclipse plugin that will perform the headless import
+# of projects into the workspace
+
+sudo -i -u vagrant \
+   wget -P /home/vagrant/eclipse/dropins/ \
+      https://github.com/snowch/test.myapp/raw/master/test.myapp_1.0.0.jar
+
+# get all the directories that can be imported into eclipse and append them
+# with '-import'
+
+IMPORTS=`find /home/vagrant/incubator-stratos/ -type f -name .project`
+
+# prepend '-import' to the first project directory
+IMPORTS="-import $IMPORTS" 
+
+# strip off the .project from the filename and add a '-import' 
+IMPORTS=`echo $IMPORTS | sed 's/.project / -import /g'` 
+
+# strip off the final .project
+IMPORTS=`echo $IMPORTS | sed 's/.project$//g'`
+
+# perform the import
+
+sudo -i -u vagrant \
+   /home/vagrant/eclipse/eclipse -nosplash \
+   -application test.myapp.App \
+   -data /home/vagrant/workspace $IMPORTS
+
+# add the M2_REPO variable to the workspace
 
 sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
