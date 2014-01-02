@@ -30,20 +30,20 @@ then
 fi
 
 # stratos version
-STRATOS_VERSION=4.0.0-SNAPSHOT
+ST_VN=4.0.0-SNAPSHOT
 
 # the directory containing the products
-PROD_DIR=/home/vagrant/incubator-stratos/products/
+PROD_DIR=/home/vagrant/.m2/repository/org/apache/stratos/
 
 # the stratos installer folder
 STRATOS_PACK_DIR=/home/vagrant/stratos
 
 PRODUCTS=(
-   cloud-controller/modules/distribution/target/apache-stratos-cc-${STRATOS_VERSION}.zip
-   stratos-controller/modules/distribution/target/apache-stratos-sc-${STRATOS_VERSION}.zip
-   load-balancer/modules/distribution/target/apache-stratos-load-balancer-${STRATOS_VERSION}.zip
-   cartridge-agent/modules/distribution/target/apache-stratos-cartridge-agent-${STRATOS_VERSION}-bin.zip 
-   stratos-cli/distribution/target/apache-stratos-cli-${STRATOS_VERSION}.zip
+  cc/apache-stratos-cc/${ST_VN}/apache-stratos-cc-${ST_VN}.zip
+  apache-stratos-sc/${ST_VN}/apache-stratos-sc-${ST_VN}.zip
+  load/balancer/apache-stratos-load-balancer/${ST_VN}/apache-stratos-load-balancer-${ST_VN}.zip
+  apache-stratos-cartridge-agent/${ST_VN}/apache-stratos-cartridge-agent-${ST_VN}-bin.zip
+  apache-stratos-cli/${ST_VN}/apache-stratos-cli-${ST_VN}.zip
 )
 
 # mkdir if it doesn't exist

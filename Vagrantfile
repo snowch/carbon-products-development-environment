@@ -30,14 +30,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "centos64"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
 
-  #config.vm.network "private_network", ip: "192.168.55.10"
-
-  # The host machine can use Remote Desktop Connection (windows) or
-  # rdesktop (linux/osx) to connect to localhost:4480 the username
-  # and password is vagrant/vagrant
-
-  config.vm.network "forwarded_port", guest: 3389, host: 4480
-
   ###############
   # PLUGIN CONFIG
   ###############
@@ -71,11 +63,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   end
 
+  ###########################################
+  #
+  # Stratos Development machine
+  #
+  ###########################################
 
   config.vm.define "stratosdev" do |stratosdev|
 
-    # May need to set this if UI takes a long time booting
-    #config.vm.boot_timeout = xx
+     # May need to set this if UI takes a long time booting
+     #config.vm.boot_timeout = xx
+
+     # The host machine can use Remote Desktop Connection (windows) or
+     # rdesktop (linux/osx) to connect to localhost:4480 the username
+     # and password is vagrant/vagrant
+
+     stratosdev.vm.network "forwarded_port", guest: 3389, host: 4480
 
      stratosdev.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", "2048"]
@@ -96,14 +99,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      # TODO : restart?
   end
 
-  config.vm.define "stratosruntime" do |stratosruntime|
- 
-     #config.vm.synced_folder "./stratos_installer",
-#	"/home/vagrant/stratos/", 
-#        :create => true,
-#	:mount_option => "dmode=777,fmode=666"
+  ###########################################
+  #
+  # Stratos Runtime machine
+  #
+  ###########################################
 
-     #stratosruntime.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
+  config.vm.define "stratosruntime" do |stratosruntime|
+
+     stratosruntime.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", "2048"]
+     end
+
+     # the runtime deploys artifacts from the m2 repository
+ 
+     stratosruntime.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
+	"/home/vagrant/.m2/", 
+        :create => true,
+	:mount_option => "dmode=777,fmode=666"
+
+     stratosruntime.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
   end
 
 end
