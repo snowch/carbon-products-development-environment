@@ -72,7 +72,12 @@ eclipse window.  After building in eclipse, there should be no build errors.
 Stratos Runtime Environment
 ---------------------------
 
-TODO work on this environment has only just started.
+TODO work on this environment has only just started.  To start this environment ``vagrant up stratosruntime```.
+
+Currently, just a CentOS 6.4 box, that 
+
+- downloads and unpacks wso2 message broker
+- unpacks apache stratos components directly from the .m2 repo (that were built by stratosdev)
 
 Openstack
 ---------
