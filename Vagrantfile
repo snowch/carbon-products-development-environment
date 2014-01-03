@@ -55,7 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ###########################################
 
   config.vm.define "openstack" do |openstack|
-
+ 
      openstack.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", "2048"]
      end
@@ -118,7 +118,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         :create => true,
 	:mount_option => "dmode=777,fmode=666"
 
-     stratosruntime.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
+     stratosruntime.vm.provision "shell", 
+        path: "scripts/stratos_runtime_setup.sh",
+        args: ENV['FORCE_PROVISION'] == "true" ? "-f" : ""
   end
 
 end

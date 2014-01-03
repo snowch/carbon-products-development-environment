@@ -33,8 +33,13 @@ then
 fi
 
 cat << EOF > /etc/profile.d/maven.sh
-export M2_HOME=/opt/apache-maven-3.0.5
-export M2=\$M2_HOME/bin
-export PATH=$M2:$PATH
+M2_HOME=/opt/apache-maven-3.0.5
+export M2_HOME
+
+M2=\$M2_HOME/bin
+export M2
+
+PATH=\$M2:$PATH
+export PATH
 EOF
 
