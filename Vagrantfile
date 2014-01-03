@@ -121,6 +121,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      stratosruntime.vm.provision "shell", 
         path: "scripts/stratos_runtime_setup.sh",
         args: ENV['FORCE_PROVISION'] == "true" ? "-f" : ""
+
+     stratosruntime.vm.provision "shell", path: "scripts/stratos_mb_setup.sh"
+     stratosruntime.vm.provision "shell", path: "scripts/stratos_cep_setup.sh"
+
+     stratosruntime.vm.provision "shell", 
+        inline: "chown -R vagrant:vagrant /home/vagrant/stratos"
   end
 
 end

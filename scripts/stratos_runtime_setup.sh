@@ -94,46 +94,6 @@ do
    unzip -qq ${PROD_DIR}${item} -d $STRATOS_PACK_DIR
 done
 
-########################################
-#
-# Setup Message Broker and CEP
-#
-########################################
-
-PRODUCTS=( 
-  http://maven.wso2.org/nexus/content/groups/wso2-public/org/wso2/cep/wso2cep/3.0.0/wso2cep-3.0.0.zip
-  http://dist.wso2.org/downloads/message-broker/2.1.0/rc1/wso2mb-2.1.0.zip 
-)
-
-for item in ${PRODUCTS[*]}
-do
-   wget -nv -c -P /vagrant/downloads/ $item 
-   unzip -qq /vagrant/downloads/`basename ${item}` -d $STRATOS_PACK_DIR
-done
-
-
-chown -R vagrant:vagrant $STRATOS_PACK_DIR
-
-#######################
-# Message Broker Config
-# 
-# Set port offset.  Resulting TCP port is 5677
-
-sed -i 's/<Offset>0/<Offset>5/g' /home/vagrant/stratos/wso2mb-2.1.0/repository/conf/carbon.xml
-
-#######################
-# CEP Config
-# 
-
-sed -i 's/<Offset>0/<Offset>4/g' /home/vagrant/stratos/wso2cep-3.0.0/repository/conf/carbon.xml
-
-mv /home/vagrant/stratos/wso2cep-3.0.0/repository/conf/stream-manager-config.xml \
-   /home/vagrant/stratos/wso2cep-3.0.0/repository/conf/stream-manager-config.xml.bak
-
-wget -nv -c \
-    -P /home/vagrant/stratos/wso2cep-3.0.0/repository/conf/ \
-    https://raw.github.com/apache/incubator-stratos/master/extensions/cep/artifacts/streamdefinitions/stream-manager-config.xml
-
 ###############
 # Finished
 ###############
