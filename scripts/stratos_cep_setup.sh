@@ -74,8 +74,32 @@ GIT_EXT_DIR=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/
 
 for item in ${EXTENSIONS[*]}
 do
+    echo "Getting ${GIT_EXT_DIR}/${item}"
     wget -nv -c \
        -P $CEP_HOME/repository/deployment/server/eventbuilders/ \
        ${GIT_EXT_DIR}/${item}
 done
 
+wget -nv -c -P $CEP_HOME/repository/deployment/server/inputeventadaptors/ https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/inputeventadaptors/DefaultWSO2EventInputAdaptor.xml
+
+wget -nv -c -P $CEP_HOME/repository/deployment/server/outputeventadaptors/ https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/outputeventadaptors/DefaultWSO2EventOutputAdaptor.xml
+
+wget -nv -c -P $CEP_HOME/repository/deployment/server/outputeventadaptors/ https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/outputeventadaptors/JMSOutputAdaptor.xml   
+
+
+EXC_PLANS=(
+  AverageHeathRequest.xml
+  AverageInFlightRequestsFinder.xml
+  GradientOfHealthRequest.xml
+  GradientOfRequestsInFlightFinder.xml
+  SecondDerivativeOfHealthRequest.xml
+  SecondDerivativeOfRequestsInFlightFinder.xml 
+)
+
+GIT_EXC_PLAN_DIR=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/executionplans/
+
+for item in ${EXC_PLAN[*]}
+do
+    echo "Getting ${GIT_EXC_PLAN_DIR}/${item}"
+    wget -nv -c -P $CEP_HOME/repository/deployment/server/executionplans/ ${GIT_EXC_PLAN_DIR}/${item}
+done
