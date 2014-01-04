@@ -98,8 +98,35 @@ EXC_PLANS=(
 
 GIT_EXC_PLAN_DIR=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/executionplans/
 
-for item in ${EXC_PLAN[*]}
+for item in ${EXC_PLANS[*]}
 do
     echo "Getting ${GIT_EXC_PLAN_DIR}/${item}"
     wget -nv -c -P $CEP_HOME/repository/deployment/server/executionplans/ ${GIT_EXC_PLAN_DIR}/${item}
+done
+
+EVT_FMT=(
+  AverageInFlightRequestsEventFormatter.xml
+  AverageLoadAverageEventFormatter.xml
+  AverageMemoryConsumptionEventFormatter.xml
+  FaultMessageEventFormatter.xml
+  GradientInFlightRequestsEventFormatter.xml
+  GradientLoadAverageEventFormatter.xml
+  GradientMemoryConsumptionEventFormatter.xml
+  MemberAverageLoadAverageEventFormatter.xml
+  MemberAverageMemoryConsumptionEventFormatter.xml
+  MemberGradientLoadAverageEventFormatter.xml
+  MemberGradientMemoryConsumptionEventFormatter.xml
+  MemberSecondDerivativeLoadAverageEventFormatter.xml
+  MemberSecondDerivativeMemoryConsumptionEventFormatter.xml
+  SecondDerivativeInFlightRequestsEventFormatter.xml
+  SecondDerivativeLoadAverageEventFormatter.xml
+  SecondDerivativeMemoryConsumptionEventFormatter.xml
+)
+
+GIT_EVT_FMT_DIR=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/eventformatters/
+
+for item in ${EVT_FMT[*]}
+do
+    echo "Getting ${GIT_EVT_FMT_DIR}/${item}"
+    wget -nv -c -P $CEP_HOME/repository/deployment/server/eventformatters/ ${GIT_EVT_FMT_DIR}/${item}
 done
