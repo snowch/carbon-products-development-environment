@@ -55,12 +55,7 @@ fi
 sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_clean_install.log clean install
-
-echo "built distributions after first build ..."
-
-find incubator-stratos/products/ -name *.zip | grep distribution
-
+   -l /vagrant/log/stratos_mvn_clean_install.log clean install dependency:go-offline
 
 #####################
 # maven eclipse setup
@@ -72,7 +67,7 @@ sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/stratos_mvn_eclipse_eclipse.log \
-   eclipse:eclipse 
+   -o eclipse:eclipse 
 
 # we need an eclipse plugin that will perform the headless import
 # of projects into the workspace
@@ -111,10 +106,6 @@ sudo -i -u vagrant \
    -Declipse.workspace=/home/vagrant/workspace/ \
    eclipse:configure-workspace
 
-echo "built distributions after first build ..."
-
-find incubator-stratos/products/ -name *.zip | grep distribution
-
 ######################################################
 # FIXME
 # hack to build cloud controller distribution
@@ -125,11 +116,8 @@ sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B \
    -f $STRATOS_SRC/products/cloud-controller/modules/distribution/pom.xml \
    -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_install.log install
-
-echo "built distributions after second build ..."
-
-find incubator-stratos/products/ -name *.zip | grep distribution
+   -l /vagrant/log/stratos_mvn_install.log \
+   -o install
 
 
 date > /etc/stratos_developer_provisioned_date 
