@@ -64,30 +64,45 @@ EOF
 cp -f /home/vagrant/.m2/repository/org/apache/stratos/org.apache.stratos.cep.extension/1.0.0-SNAPSHOT/org.apache.stratos.cep.extension-1.0.0-SNAPSHOT.jar \
   ${CEP_HOME}/repository/components/lib/
 
-EXTENSIONS=(
+###################
+
+# func relies on folder_name and file_names variables being
+# populated
+#
+function get_artifacts 
+{
+
+   git_dir=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/${folder_name}
+      
+   for item in ${file_names[*]}
+   do
+      git_file=${git_dir}/${item}
+      dst_dir=$CEP_HOME/repository/deployment/server/${folder_name}/ 
+
+      echo "Getting ${git_file}"
+      wget -nv -c -P ${dst_dir} ${git_file}
+   done
+
+}
+
+folder_name="eventbuilders"
+file_names=(
    HealthStatisticsEventBuilder.xml
    InstanceStatusStatisticsBuilder.xml
    LoadBalancerStatisticsEventBuilder.xml
 )
+get_artifacts 
 
-GIT_EXT_DIR=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/eventbuilders/
+folder_name="inputeventadaptors"
+file_names=( DefaultWSO2EventInputAdaptor.xml )
+get_artifacts 
 
-for item in ${EXTENSIONS[*]}
-do
-    echo "Getting ${GIT_EXT_DIR}/${item}"
-    wget -nv -c \
-       -P $CEP_HOME/repository/deployment/server/eventbuilders/ \
-       ${GIT_EXT_DIR}/${item}
-done
+folder_name="outputeventadaptors"
+file_names=( DefaultWSO2EventOutputAdaptor.xml )
+get_artifacts 
 
-wget -nv -c -P $CEP_HOME/repository/deployment/server/inputeventadaptors/ https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/inputeventadaptors/DefaultWSO2EventInputAdaptor.xml
-
-wget -nv -c -P $CEP_HOME/repository/deployment/server/outputeventadaptors/ https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/outputeventadaptors/DefaultWSO2EventOutputAdaptor.xml
-
-wget -nv -c -P $CEP_HOME/repository/deployment/server/outputeventadaptors/ https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/outputeventadaptors/JMSOutputAdaptor.xml   
-
-
-EXC_PLANS=(
+folder_name="executionplans"
+file_names=(
   AverageHeathRequest.xml
   AverageInFlightRequestsFinder.xml
   GradientOfHealthRequest.xml
@@ -95,16 +110,10 @@ EXC_PLANS=(
   SecondDerivativeOfHealthRequest.xml
   SecondDerivativeOfRequestsInFlightFinder.xml 
 )
+get_artifacts 
 
-GIT_EXC_PLAN_DIR=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/executionplans/
-
-for item in ${EXC_PLANS[*]}
-do
-    echo "Getting ${GIT_EXC_PLAN_DIR}/${item}"
-    wget -nv -c -P $CEP_HOME/repository/deployment/server/executionplans/ ${GIT_EXC_PLAN_DIR}/${item}
-done
-
-EVT_FMT=(
+folder_name="eventformatters"
+file_names=(
   AverageInFlightRequestsEventFormatter.xml
   AverageLoadAverageEventFormatter.xml
   AverageMemoryConsumptionEventFormatter.xml
@@ -122,11 +131,4 @@ EVT_FMT=(
   SecondDerivativeLoadAverageEventFormatter.xml
   SecondDerivativeMemoryConsumptionEventFormatter.xml
 )
-
-GIT_EVT_FMT_DIR=https://github.com/apache/incubator-stratos/raw/4.0.0-incubating-m5/extensions/cep/artifacts/eventformatters/
-
-for item in ${EVT_FMT[*]}
-do
-    echo "Getting ${GIT_EVT_FMT_DIR}/${item}"
-    wget -nv -c -P $CEP_HOME/repository/deployment/server/eventformatters/ ${GIT_EVT_FMT_DIR}/${item}
-done
+get_artifacts 
