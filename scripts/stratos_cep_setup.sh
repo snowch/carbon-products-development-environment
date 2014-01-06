@@ -32,7 +32,11 @@ STRATOS_DIR=/home/vagrant/stratos
 
 CEP_URL=http://maven.wso2.org/nexus/content/groups/wso2-public/org/wso2/cep/wso2cep/3.0.0/wso2cep-3.0.0.zip
 
-wget -nv -c -P /vagrant/downloads/ $CEP_URL
+# this maven version of cep seems to be broken, so it must be downloaded from
+# http://wso2.com/products/complex-event-processor/ and placed in /vagrant/downloads folder
+#
+# wget -nv -c -P /vagrant/downloads/ $CEP_URL
+#
 unzip -qq /vagrant/downloads/`basename ${CEP_URL}` -d $STRATOS_DIR
 
 sed -i 's/<Offset>0/<Offset>4/g' ${CEP_HOME}/repository/conf/carbon.xml
@@ -64,10 +68,10 @@ EOF
 cp -f /home/vagrant/.m2/repository/org/apache/stratos/org.apache.stratos.cep.extension/1.0.0-SNAPSHOT/org.apache.stratos.cep.extension-1.0.0-SNAPSHOT.jar \
   ${CEP_HOME}/repository/components/lib/
 
-###################
-
-# func relies on folder_name and file_names variables being
-# populated
+#####################################################################
+# This utility function retrieves files from github
+#
+# func relies on folder_name and file_names variables being populated
 #
 function get_artifacts 
 {
