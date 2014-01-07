@@ -39,7 +39,25 @@ CEP_URL=http://maven.wso2.org/nexus/content/groups/wso2-public/org/wso2/cep/wso2
 #
 unzip -qq /vagrant/downloads/`basename ${CEP_URL}` -d $STRATOS_DIR
 
+# Update port offset
+
 sed -i 's/<Offset>0/<Offset>4/g' ${CEP_HOME}/repository/conf/carbon.xml
+
+# Update memory settings
+#   note that grep will die if string isn't found
+#   for example if the upstream memory settings change
+
+FIND="-Xms256m -Xmx1024m -XX:MaxPermSize=256m"
+REPLACE="-Xms64m -Xmx256m -XX:MaxPermSize=128m"
+MB_FILE=${CEP_HOME}/bin/wso2server.sh
+
+# grep needs first dash escaped
+
+grep "\\${FIND}" $MB_FILE
+
+sed -i "s/${FIND}/${REPLACE}/g" ${MB_FILE}
+
+# Add stream manager settings
 
 wget -nv -c \
     -P ${CEP_HOME}/repository/conf/ \
