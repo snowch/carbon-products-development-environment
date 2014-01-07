@@ -9,8 +9,9 @@ uses Vagrant and bash shell scripts to automatically provision three environment
 - **Openstack** containing a complete openstack Havana environment.
 - **Stratos Runtime Environment** containing a stratos deployment that interacts with the openstack environment.
 
-This project is a work-in-progress.  There is still much to be done to configure the environments to work
-with each other.
+The setup uses shell scripts because the scripts pretty much mirror the manual setup instructions for stratos.  Therefore, the manual setup instructions can be followed, but the setup can be automated.  This will be more beneficial to users who are new to stratos.
+
+This project is a work-in-progress.  There is still much to be done to configure the environments to work with each other.
 
 Prerequisites
 -------------
