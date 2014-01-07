@@ -31,10 +31,29 @@ set -x
 
 STRATOS_DIR=/home/vagrant/stratos/
 MB_URL=http://dist.wso2.org/downloads/message-broker/2.1.0/rc1/wso2mb-2.1.0.zip 
+MB_HOME=/home/vagrant/stratos/wso2mb-2.1.0/
+
+# Download and unpack message broker
 
 wget -nv -c -P /vagrant/downloads/ $MB_URL
 unzip -qq /vagrant/downloads/`basename ${MB_URL}` -d $STRATOS_DIR 
 
+# Update port offset
+
 sed -i 's/<Offset>0/<Offset>5/g' \
-   /home/vagrant/stratos/wso2mb-2.1.0/repository/conf/carbon.xml
+   ${MB_HOME}/repository/conf/carbon.xml
+
+# Update memory settings
+#   note that grep will die if string isn't found
+#   for example if the upstream memory settings change
+
+FIND="-Xms256m -Xmx1024m -XX:MaxPermSize=256m"
+REPLACE="-Xms64m -Xmx256m -XX:MaxPermSize=128m"
+MB_FILE=${MB_HOME}/bin/wso2server.sh
+
+# grep needs first dash escaped
+
+grep "\\${FIND}" $MB_FILE 
+
+sed -i "s/${FIND}/${REPLACE}/g" ${MB_FILE}
 
