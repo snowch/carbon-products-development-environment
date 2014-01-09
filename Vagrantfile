@@ -39,14 +39,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   # vagrant-cachier : https://github.com/fgrehm/vagrant-cachier
 
-  config.cache.auto_detect = true
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.auto_detect = true
+  else
+    puts "[information] recommended vagrant plugin 'vagrant-cachier' plugin was not found" 
+    puts "[information] 'vagrant-cachier' will speed up repeated provisioning operations" 
+  end
 
   # Use the vbguest plugin to keep the guest os virtualbox utils
   # in line with the host's virtualbox version
   #
   # vbguest : https://github.com/dotless-de/vagrant-vbguest
 
-  config.vbguest.auto_update = true
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    config.vbguest.auto_update = true
+  else 
+    puts "[information] recommended vagrant plugin 'vagrant-vbguest' plugin was not found" 
+    puts "[information] please consider installing 'vagrant-vbguest'" 
+  end
 
   ###########################################
   #
@@ -57,7 +67,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "openstack" do |openstack|
  
      openstack.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", "2048"]
+        vb.customize ["modifyvm", :id, "--memory", "4096"]
      end
      openstack.vm.provision "shell", path: "scripts/openstack_setup.sh"
 
@@ -71,6 +81,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "stratosdev" do |stratosdev|
 
+     # TODO get install_runtime parameter as environment variable
+     install_runtime = true
+
      # May need to set this if UI takes a long time booting
      #config.vm.boot_timeout = xx
 
@@ -81,7 +94,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      stratosdev.vm.network "forwarded_port", guest: 3389, host: 4480
 
      stratosdev.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", "2048"]
+        if install_runtime
+           # need more memory if installing runtime
+           vb.customize ["modifyvm", :id, "--memory", "4096"]
+        else
+           vb.customize ["modifyvm", :id, "--memory", "2048"]
+        end
         vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
      end
 
@@ -97,6 +115,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      stratosdev.vm.provision "shell", path: "scripts/desktop_setup.sh"
      stratosdev.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
      # TODO : restart?
+
+
+     if install_runtime
+        stratosdev.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
+        stratosdev.vm.provision "shell", path: "scripts/stratos_mb_setup.sh"
+        stratosdev.vm.provision "shell", path: "scripts/stratos_cep_setup.sh"
+     end
   end
 
   ###########################################
