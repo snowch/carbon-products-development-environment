@@ -83,7 +83,7 @@ rm -rf $STRATOS_PACK_DIR/*
 
 PRODUCTS=(
   cc/apache-stratos-cc/${ST_VN}/apache-stratos-cc-${ST_VN}.zip
-  apache-stratos-sc/${ST_VN}/apache-stratos-sc-${ST_VN}.zip
+  apache-stratos-manager/${ST_VN}/apache-stratos-manager-${ST_VN}.zip
   load/balancer/apache-stratos-load-balancer/${ST_VN}/apache-stratos-load-balancer-${ST_VN}.zip
   apache-stratos-cartridge-agent/${ST_VN}/apache-stratos-cartridge-agent-${ST_VN}-bin.zip
   apache-stratos-cli/${ST_VN}/apache-stratos-cli-${ST_VN}.zip
