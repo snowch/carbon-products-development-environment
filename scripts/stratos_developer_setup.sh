@@ -55,7 +55,9 @@ fi
 sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_clean_install.log clean install dependency:go-offline
+   -l /vagrant/log/stratos_mvn_clean_install.log \
+   -Dmaven.test.skip=true \
+   clean install
 
 #####################
 # maven eclipse setup
@@ -67,7 +69,7 @@ sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/stratos_mvn_eclipse_eclipse.log \
-   -o eclipse:eclipse 
+   eclipse:eclipse 
 
 # we need an eclipse plugin that will perform the headless import
 # of projects into the workspace
@@ -117,7 +119,8 @@ sudo -i -u vagrant \
    -f $STRATOS_SRC/products/cloud-controller/modules/distribution/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/stratos_mvn_install.log \
-   -o install
+   -Dmaven.test.skip=true \
+   install
 
 
 date > /etc/stratos_developer_provisioned_date 
