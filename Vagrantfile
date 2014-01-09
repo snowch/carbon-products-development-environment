@@ -104,6 +104,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      end
 
      # Maven synced folder 
+     #
+     # TODO use a bigger base box so the m2 repository could be installed
+     # on a local guest drive which will be much faster.  Currently, the
+     # base box only has about 10Gb space
 
      stratosdev.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
 	"/home/vagrant/.m2/", 
