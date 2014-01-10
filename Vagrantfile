@@ -42,8 +42,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.auto_detect = true
   else
-    puts "[information] recommended vagrant plugin 'vagrant-cachier' plugin was not found" 
-    puts "[information] 'vagrant-cachier' will speed up repeated provisioning operations" 
+    # only display the tips on vagrant up
+    if ARGV[0] == "up"
+      puts "[information] recommended vagrant plugin 'vagrant-cachier' plugin was not found" 
+      puts "[information] 'vagrant-cachier' will speed up repeated provisioning operations" 
+    end
   end
 
   # Use the vbguest plugin to keep the guest os virtualbox utils
@@ -54,8 +57,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   if Vagrant.has_plugin?("vagrant-vbguest")
     config.vbguest.auto_update = true
   else 
-    puts "[information] recommended vagrant plugin 'vagrant-vbguest' plugin was not found" 
-    puts "[information] please consider installing 'vagrant-vbguest'" 
+    # only display the tips on vagrant up
+    if ARGV[0] == "up"
+      puts "[information] recommended vagrant plugin 'vagrant-vbguest' plugin was not found" 
+      puts "[information] please consider installing 'vagrant-vbguest'" 
+    end
   end
 
   ###########################################
@@ -125,6 +131,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         stratosdev.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
         stratosdev.vm.provision "shell", path: "scripts/stratos_mb_setup.sh"
         stratosdev.vm.provision "shell", path: "scripts/stratos_cep_setup.sh"
+        stratosdev.vm.provision "shell", 
+           inline: "chown -R vagrant:vagrant /home/vagrant/stratos"
      end
   end
 
