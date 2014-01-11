@@ -35,7 +35,7 @@ MB_HOME=/home/vagrant/stratos/wso2mb-2.1.0/
 
 # Download and unpack message broker
 
-wget -nv -c --no-check-certificate -O /vagrant/downloads/$(basename $CEP_URL) $MB_URL
+wget -nv -c --no-check-certificate -O /vagrant/downloads/$(basename $MB_URL) $MB_URL
 unzip -qq /vagrant/downloads/`basename ${MB_URL}` -d $STRATOS_DIR 
 
 # Update port offset
