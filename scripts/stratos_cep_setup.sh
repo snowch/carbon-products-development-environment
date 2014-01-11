@@ -37,7 +37,7 @@ CEP_URL=https://www.dropbox.com/sh/855iyfpjfnkoi2e/NRPvjQiyhd/wso2cep-3.0.0.zip
 # this maven version of cep seems to be broken, so it must be downloaded from
 # http://wso2.com/products/complex-event-processor/ and placed in /vagrant/downloads folder
 #
-wget -nv -c --no-check-certificate -P /vagrant/downloads/ -O $(basename $CEP_URL) $CEP_URL 
+wget -nv -c --no-check-certificate -O /vagrant/downloads/$(basename $CEP_URL) $CEP_URL 
 unzip -qq /vagrant/downloads/`basename ${CEP_URL}` -d $STRATOS_DIR
 
 # Update port offset
