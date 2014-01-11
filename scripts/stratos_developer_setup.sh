@@ -44,7 +44,7 @@ yum install -y git java-1.7.0-openjdk-devel
 
 if [ -d $STRATOS_SRC ]; 
 then
-   # TODO should we do an update
+   # TODO should we do an update?
    echo 'Found stratos src folder.  Not updating git.'
 else
    sudo -i -u vagrant \
@@ -81,23 +81,22 @@ sudo -i -u vagrant \
 # get all the directories that can be imported into eclipse and append them
 # with '-import'
 
-IMPORTS=`find /home/vagrant/incubator-stratos/ -type f -name .project`
+IMPORTS=$(find /home/vagrant/incubator-stratos/ -type f -name .project)
 
-# prepend '-import' to the first project directory
-IMPORTS="-import $IMPORTS" 
+# Although it is possible to import multiple directories with one 
+# invocation of the test.myapp.App, this fails if one of the imports
+# was not successful.  Using a for loop is slower, but more robust
+for item in ${IMPORTS[*]}; 
+do 
+   IMPORT="$(dirname $item)/"
 
-# strip off the .project from the filename and add a '-import' 
-IMPORTS=`echo $IMPORTS | sed 's/.project / -import /g'` 
-
-# strip off the final .project
-IMPORTS=`echo $IMPORTS | sed 's/.project$//g'`
-
-# perform the import
-
-sudo -i -u vagrant \
-   /home/vagrant/eclipse/eclipse -nosplash \
-   -application test.myapp.App \
-   -data /home/vagrant/workspace $IMPORTS
+   # perform the import
+   sudo -i -u vagrant \
+      /home/vagrant/eclipse/eclipse -nosplash \
+      -application test.myapp.App \
+      -data /home/vagrant/workspace \
+      -import $IMPORT
+done
 
 # add the M2_REPO variable to the workspace
 
