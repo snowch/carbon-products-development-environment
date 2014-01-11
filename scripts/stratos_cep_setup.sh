@@ -30,7 +30,6 @@ set -x
 CEP_HOME=/home/vagrant/stratos/wso2cep-3.0.0/
 STRATOS_DIR=/home/vagrant/stratos
 
-#CEP_URL=http://maven.wso2.org/nexus/content/groups/wso2-public/org/wso2/cep/wso2cep/3.0.0/wso2cep-3.0.0.zip
 CEP_URL=https://www.dropbox.com/sh/855iyfpjfnkoi2e/NRPvjQiyhd/wso2cep-3.0.0.zip
 
 

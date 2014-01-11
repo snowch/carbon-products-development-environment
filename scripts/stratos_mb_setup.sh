@@ -30,7 +30,7 @@ set -x
 ########################################
 
 STRATOS_DIR=/home/vagrant/stratos/
-MB_URL=http://dist.wso2.org/downloads/message-broker/2.1.0/rc1/wso2mb-2.1.0.zip 
+MB_URL=https://www.dropbox.com/sh/855iyfpjfnkoi2e/b-RFY_qDR1/wso2mb-2.1.0.zip
 MB_HOME=/home/vagrant/stratos/wso2mb-2.1.0/
 
 # Download and unpack message broker
