@@ -87,11 +87,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "stratosdev" do |stratosdev|
 
-     # TODO get install_runtime parameter as environment variable
+     # TODO get install_openstack and install_runtime parameters
+     #      as environment variables
+     install_openstack = true
      install_runtime = true
-
-     # May need to set this if UI takes a long time booting
-     #config.vm.boot_timeout = xx
 
      # The host machine can use Remote Desktop Connection (windows) or
      # rdesktop (linux/osx) to connect to localhost:4480 the username
@@ -100,25 +99,55 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      stratosdev.vm.network "forwarded_port", guest: 3389, host: 4480
 
      stratosdev.vm.provider :virtualbox do |vb|
-        if install_runtime
-           # need more memory if installing runtime
+
+        # need more memory if installing openstack or runtime
+
+        if install_openstack && install_runtime
+           vb.customize ["modifyvm", :id, "--memory", "6144"]
+        elsif install_openstack || install_runtime
            vb.customize ["modifyvm", :id, "--memory", "4096"]
         else
            vb.customize ["modifyvm", :id, "--memory", "2048"]
         end
         vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+
+        # FIXME: Find/Create a base box with a larger drive
+        # The CentOS image has insufficient space, so lets add
+        # another drive until we create a new box. 
+
+        file_to_disk = File.realpath( "." ).to_s + "/disk.vdi"
+
+        if ARGV[0] == "up" && ! File.exist?(file_to_disk) 
+           puts "Creating 5GB disk #{file_to_disk}."
+           vb.customize [
+                'createhd', 
+                '--filename', file_to_disk, 
+                '--format', 'VDI', 
+                '--size', 5000 * 1024 # 5 GB
+                ] 
+           vb.customize [
+                'storageattach', :id, 
+                '--storagectl', 'SATA Controller', 
+                '--port', 1, '--device', 0, 
+                '--type', 'hdd', '--medium', 
+                file_to_disk
+                ]
+        end
      end
 
-     # Maven synced folder 
-     #
-     # TODO use a bigger base box so the m2 repository could be installed
-     # on a local guest drive which will be much faster.  Currently, the
-     # base box only has about 10Gb space
+     # Maven synced folder - speeds up repeated builds because
+     # the m2 repo acts as a cache
 
      stratosdev.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
 	"/home/vagrant/.m2/", 
         :create => true,
 	:mount_option => "dmode=777,fmode=666"
+
+     stratosdev.vm.provision "shell", path: "scripts/add_new_disk.sh"
+
+     if install_openstack
+        stratosdev.vm.provision "shell", path: "scripts/openstack_setup.sh"
+     end
 
      stratosdev.vm.provision "shell", path: "scripts/create_folders.sh"
      stratosdev.vm.provision "shell", path: "scripts/maven_setup.sh"

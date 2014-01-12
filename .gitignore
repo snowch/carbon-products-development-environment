@@ -2,3 +2,5 @@ downloads/
 log/
 stratos_installer/
 .vagrant/
+disk.vdi
+nohup.out
