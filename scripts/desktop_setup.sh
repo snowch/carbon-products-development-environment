@@ -34,7 +34,7 @@ fi
 #################
 
 yum -y groupinstall "Desktop" "Desktop Platform" "X Window System" "Fonts"
-yum install -y firefox 
+yum install -y firefox gedit
 
 #cp /etc/inittab /etc/inittab.bak 
 #sed -i 's/id:3:initdefault:/id:5:initdefault:/' /etc/inittab
@@ -109,6 +109,20 @@ EOF
 
 chown vagrant:vagrant /home/vagrant/Desktop/openstack.desktop
 chmod 770 /home/vagrant/Desktop/openstack.desktop
+
+# Dashboard username and password
+
+DASHBOARD_PASSWORD=$(grep 'CONFIG_KEYSTONE_ADMIN_PW' /root/packstack-answers-*.txt | cut -d '=' -f 2)
+DASHBOARD_USERNAME='admin'
+
+cat << EOF > /home/vagrant/Desktop/Openstack_Dashboard_Password.txt
+Username: ${DASHBOARD_USERNAME}
+Password: ${DASHBOARD_PASSWORD}
+EOF
+
+# All Openstack Passwords
+
+grep 'PW' /root/packstack-answers-*.txt > /home/vagrant/Desktop/Openstack_Passwords.txt
 
 ##############################
 # eclipse launcher
