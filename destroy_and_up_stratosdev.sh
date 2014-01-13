@@ -25,4 +25,4 @@
 nohup sh -c "rm -rf ~/.vagrant.d/.m2/ ~/.vagrant.d/cache/ && \
    vagrant destroy stratosdev -f && \
    sleep 10 && \
-   vagrant up stratosdev"
+   vagrant up stratosdev" &
