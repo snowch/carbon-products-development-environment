@@ -40,4 +40,22 @@ send "vagrant\n"
 expect eof
 EOF
 
+# virtualbox guests only support type qemu
+sed -i 's/^libvirt_type=kvm/libvirt_type=qemu/g' /etc/nova/nova.conf
+
+RESTART_SERVICES=(
+nova-api
+nova-cert
+nova-consoleauth
+nova-scheduler 
+nova-conductor
+nova-novncproxy
+nova-compute
+)
+
+for svc in ${RESTART_SERVICES[*]}
+do
+   /etc/init.d/openstack-${svc} restart
+done
+
 date > /etc/openstack_provisioned_date
