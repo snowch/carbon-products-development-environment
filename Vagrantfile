@@ -34,6 +34,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # PLUGIN CONFIG
   ###############
 
+  unless Vagrant.has_plugin?("vagrant-triggers")
+     abort "[Error] vagrant-triggers plugin not found - please install it"
+  end
+
   # These vm's download lots of packages, so caching can improve
   # performance when creating new machines.
   #
@@ -72,11 +76,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "stratosdev" do |stratosdev|
 
-     # TODO get install_openstack and install_runtime parameters
-     #      as environment variables
-     install_openstack = true
-     install_runtime = true
-
      # The host machine can use Remote Desktop Connection (windows) or
      # rdesktop (linux/osx) to connect to localhost:4480 the username
      # and password is vagrant/vagrant
@@ -85,15 +84,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
      stratosdev.vm.provider :virtualbox do |vb|
 
-        # need more memory if installing openstack or runtime
-
-        if install_openstack && install_runtime
-           vb.customize ["modifyvm", :id, "--memory", "6144"]
-        elsif install_openstack || install_runtime
-           vb.customize ["modifyvm", :id, "--memory", "4096"]
-        else
-           vb.customize ["modifyvm", :id, "--memory", "2048"]
-        end
+        vb.customize ["modifyvm", :id, "--memory", "6144"]
         vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
 
         # FIXME: Find/Create a base box with a larger drive
@@ -130,24 +121,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
      stratosdev.vm.provision "shell", path: "scripts/add_new_disk.sh"
 
-     if install_openstack
-        stratosdev.vm.provision "shell", path: "scripts/openstack_setup.sh"
-     end
+     # install openstack
+     stratosdev.vm.provision "shell", path: "scripts/openstack_setup.sh"
 
+     # setup stratos development environment
      stratosdev.vm.provision "shell", path: "scripts/create_folders.sh"
      stratosdev.vm.provision "shell", path: "scripts/maven_setup.sh"
      stratosdev.vm.provision "shell", path: "scripts/desktop_setup.sh"
      stratosdev.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
-     # TODO : restart?
 
+     # setup stratos runtime
+     stratosdev.vm.provision "shell", 
+           inline: "rm -rf /home/vagrant/stratos"
 
-     if install_runtime
-        stratosdev.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
-        stratosdev.vm.provision "shell", path: "scripts/stratos_mb_setup.sh"
-        stratosdev.vm.provision "shell", path: "scripts/stratos_cep_setup.sh"
-        stratosdev.vm.provision "shell", 
+     stratosdev.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
+     stratosdev.vm.provision "shell", path: "scripts/stratos_mb_setup.sh"
+     stratosdev.vm.provision "shell", path: "scripts/stratos_cep_setup.sh"
+     stratosdev.vm.provision "shell", 
            inline: "chown -R vagrant:vagrant /home/vagrant/stratos"
-     end
+
+     # restart the box - FIXME this only really needs to happen after
+     # the first provisioning run, not after every provision run
+     stratosdev.trigger.after :provision, :execute => "vagrant reload"
+
   end
 
 end
