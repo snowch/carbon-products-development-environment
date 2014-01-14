@@ -66,21 +66,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   ###########################################
   #
-  # Openstack machine
-  #
-  ###########################################
-
-  config.vm.define "openstack" do |openstack|
- 
-     openstack.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", "4096"]
-     end
-     openstack.vm.provision "shell", path: "scripts/openstack_setup.sh"
-
-  end
-
-  ###########################################
-  #
   # Stratos Development machine
   #
   ###########################################
@@ -163,36 +148,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         stratosdev.vm.provision "shell", 
            inline: "chown -R vagrant:vagrant /home/vagrant/stratos"
      end
-  end
-
-  ###########################################
-  #
-  # Stratos Runtime machine
-  #
-  ###########################################
-
-  config.vm.define "stratosruntime" do |stratosruntime|
-
-     stratosruntime.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", "2048"]
-     end
-
-     # the runtime deploys artifacts from the m2 repository
- 
-     stratosruntime.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
-	"/home/vagrant/.m2/", 
-        :create => true,
-	:mount_option => "dmode=777,fmode=666"
-
-     stratosruntime.vm.provision "shell", 
-        path: "scripts/stratos_runtime_setup.sh",
-        args: ENV['FORCE_PROVISION'] == "true" ? "-f" : ""
-
-     stratosruntime.vm.provision "shell", path: "scripts/stratos_mb_setup.sh"
-     stratosruntime.vm.provision "shell", path: "scripts/stratos_cep_setup.sh"
-
-     stratosruntime.vm.provision "shell", 
-        inline: "chown -R vagrant:vagrant /home/vagrant/stratos"
   end
 
 end
