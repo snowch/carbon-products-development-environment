@@ -43,19 +43,23 @@ EOF
 # virtualbox guests only support type qemu
 sed -i 's/^libvirt_type=kvm/libvirt_type=qemu/g' /etc/nova/nova.conf
 
-RESTART_SERVICES=(
-nova-api
-nova-cert
-nova-consoleauth
-nova-scheduler 
-nova-conductor
-nova-novncproxy
-nova-compute
-)
+# create a utility script for developers to start/stop openstack
 
-for svc in ${RESTART_SERVICES[*]}
-do
-   /etc/init.d/openstack-${svc} restart
+cat << EOF > /home/vagrant/openstack.sh
+#!/bin/sh
+
+for script in /etc/init.d/openstack-*; 
+do 
+    sudo \$script \$1;
 done
+EOF
+
+chmod +x /home/vagrant/openstack.sh
+chown vagrant:vagrant /home/vagrant/openstack.sh
+
+# lets restart openstack now because we have changed the nova.conf
+
+/home/vagrant/openstack.sh restart
+
 
 date > /etc/openstack_provisioned_date
