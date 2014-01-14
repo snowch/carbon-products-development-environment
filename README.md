@@ -3,11 +3,7 @@ Stratos Developer Tools
 
 The aim of this project is to provide tools for developers working on 
 Apache Stratos to quickly set up development environments.  This project 
-uses Vagrant and bash shell scripts to automatically provision three environments:
-
-- **Stratos Development Environment** containing the stratos source code and eclipse.
-- **Openstack** containing a complete openstack Havana environment.
-- **Stratos Runtime Environment** containing a stratos deployment that interacts with the openstack environment.
+uses Vagrant and bash shell scripts to automatically provision there environment.
 
 The setup uses shell scripts because the scripts pretty much mirror the manual setup instructions for stratos.  Therefore, the manual setup instructions can be followed, but the setup can be automated.  This will be more beneficial to users who are new to stratos.
 
@@ -19,7 +15,8 @@ Install the following software:
 - Vagrant: http://www.vagrantup.com/downloads
 - Virtualbox: https://www.virtualbox.org/wiki/Downloads
 
-Install the vagrant plugins using **vagrant plugin install ...**:
+It is recommended to install the vagrant plugins using **vagrant plugin install ...**:
+
 - ```vagrant plugin install vagrant-cachier```
 - ```vagrant plugin install vagrant-vbguest```
 
@@ -66,19 +63,20 @@ After opening, wait for the workspace to finish building.
 You can see the build status in the bottom right of the 
 eclipse window.  After building in eclipse, there should be no build errors.
 
-**TODO**: 
 
-- Add mvn to PATH
+Stratos Runtime
+---------------
 
-Stratos Runtime Environment
----------------------------
+Note: work on setting up the runtime has only just started. 
 
-TODO work on this environment has only just started.  To start this environment ``vagrant up stratosruntime```.
+The following scripts have been completed for setting up the runtime:
 
-Currently, just a CentOS 6.4 box, that 
+  - scripts/stratos_runtime_setup.sh
+  - scripts/stratos_mb_setup.sh
+  - scripts/stratos_cep_setup.sh
 
-- downloads and unpacks wso2 message broker
-- unpacks apache stratos components directly from the .m2 repo (that were built by stratosdev)
+TODO: scripts will be required for all the other stratos components
+
 
 Openstack
 ---------
@@ -87,9 +85,7 @@ This environment is a CentOS 6.4 image that gets provisioned with openstack
 using the **packstack --allinone** installer.  
 See here: http://openstack.redhat.com/Quickstart
 
-Start the openstack environment with ```vagrant up openstack```.
+Openstack is setup with this script:
 
-TODO describe how to use this environment...
-
-- **Openstack dashboard**: http://localhost/dashboard
+  - scripts/openstack_setup.sh
 
