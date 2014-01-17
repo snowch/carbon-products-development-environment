@@ -30,7 +30,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "centos64"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
 
-  config.vm.network "private_network", ip: "192.168.50.4"
+  # this is the public openstack network
+  config.vm.network "private_network", 
+              ip: "172.16.0.5", 
+              netmask: "255.255.0.0"
+ 
+  # this is the private openstack network
+  config.vm.network "private_network", 
+              ip: "192.168.55.5", 
+              netmask: "255.255.255.0"
 
   ###############
   # PLUGIN CONFIG
@@ -61,7 +69,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # vbguest : https://github.com/dotless-de/vagrant-vbguest
 
   if Vagrant.has_plugin?("vagrant-vbguest")
-    config.vbguest.auto_update = true
+    config.vbguest.auto_update = false
   else 
     # only display the tips on vagrant up
     if ARGV[0] == "up"
