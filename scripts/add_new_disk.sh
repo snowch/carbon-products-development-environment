@@ -43,7 +43,7 @@ EOF
 
 pvcreate /dev/sdb1
 vgextend VolGroup /dev/sdb1
-lvextend -L +5G /dev/VolGroup/lv_root
+lvextend -L +30G /dev/VolGroup/lv_root # TODO the size needs to be passed in as a argument
 resize2fs /dev/VolGroup/lv_root
 
 

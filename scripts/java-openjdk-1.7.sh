@@ -20,42 +20,11 @@
 #
 # --------------------------------------------------------------
 
+# This script depends on eclipse being installed to 
+# /home/vagrant/eclipse
+
 set -e
 set -x
 
-if [ -f /etc/openstack_provisioned_date ]
-then
-   echo "Openstack already provisioned so exiting."
-   exit 0 
-fi
+yum install -y java-1.7.0-openjdk-devel 
 
-yum -y install puppet git
-
-cd /etc/puppet/modules
-git clone git://github.com/stackforge/puppet-openstack.git openstack
-cd openstack
-gem install librarian-puppet
-librarian-puppet install --path ../
-
-puppet apply /vagrant/scripts/openstack.pp --certname openstack_all
-
-# create a utility script for developers to start/stop openstack
-
-cat << EOF > /home/vagrant/openstack.sh
-#!/bin/sh
-
-for script in /etc/init.d/openstack-*; 
-do 
-    sudo \$script \$1;
-done
-EOF
-
-chmod +x /home/vagrant/openstack.sh
-chown vagrant:vagrant /home/vagrant/openstack.sh
-
-# lets restart openstack now because we have changed the nova.conf
-
-/home/vagrant/openstack.sh restart
-
-
-date > /etc/openstack_provisioned_date

@@ -30,16 +30,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "centos64"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
 
-  # this is the public openstack network
-  config.vm.network "private_network", 
-              ip: "172.16.0.5", 
-              netmask: "255.255.0.0"
- 
-  # this is the private openstack network
-  config.vm.network "private_network", 
-              ip: "192.168.55.5", 
-              netmask: "255.255.255.0"
-
   ###############
   # PLUGIN CONFIG
   ###############
@@ -104,12 +94,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         file_to_disk = File.realpath( "." ).to_s + "/disk.vdi"
 
         if ARGV[0] == "up" && ! File.exist?(file_to_disk) 
-           puts "Creating 5GB disk #{file_to_disk}."
+           puts "Creating 30GB disk #{file_to_disk}."
            vb.customize [
                 'createhd', 
                 '--filename', file_to_disk, 
                 '--format', 'VDI', 
-                '--size', 5000 * 1024 # 5 GB
+                '--size', 300000 * 1024 # 30 GB
                 ] 
            vb.customize [
                 'storageattach', :id, 
@@ -131,24 +121,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
      stratosdev.vm.provision "shell", path: "scripts/add_new_disk.sh"
 
-     # install openstack
-     stratosdev.vm.provision "shell", path: "scripts/openstack_setup.sh"
-
-     # setup stratos development environment
+     # setup carbon development environment
      stratosdev.vm.provision "shell", path: "scripts/create_folders.sh"
      stratosdev.vm.provision "shell", path: "scripts/maven_setup.sh"
+     stratosdev.vm.provision "shell", path: "scripts/java-oraclejdk-1.6.sh"
      stratosdev.vm.provision "shell", path: "scripts/desktop_setup.sh"
-     stratosdev.vm.provision "shell", path: "scripts/stratos_developer_setup.sh"
-
-     # setup stratos runtime
-     stratosdev.vm.provision "shell", 
-           inline: "rm -rf /home/vagrant/stratos"
-
-     stratosdev.vm.provision "shell", path: "scripts/stratos_runtime_setup.sh"
-     stratosdev.vm.provision "shell", path: "scripts/stratos_mb_setup.sh"
-     stratosdev.vm.provision "shell", path: "scripts/stratos_cep_setup.sh"
-     stratosdev.vm.provision "shell", 
-           inline: "chown -R vagrant:vagrant /home/vagrant/stratos"
+     stratosdev.vm.provision "shell", path: "scripts/developer_setup.sh"
 
      # restart the box - FIXME this only really needs to happen after
      # the first provisioning run, not after every provision run

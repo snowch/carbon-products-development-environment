@@ -23,26 +23,10 @@
 set -e
 set -x
 
-MAVEN_DOWNLOAD_URL=http://www.mirrorservice.org/sites/ftp.apache.org/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz
+wget -nv -c -P /vagrant/downloads/ \
+   --no-cookies \
+   --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com" \
+   "http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-linux-x64.rpm" \
+   -O /opt/jdk-7u45-linux-x64.rpm --no-check-certificate
 
-
-if [ ! -d /opt/apache-maven-3.0.5 ]
-then
-   wget -nv -c -P /vagrant/downloads/ $MAVEN_DOWNLOAD_URL
-   su -c "tar -zxvf /vagrant/downloads/apache-maven-3.0.5-bin.tar.gz -C /opt/" 
-fi
-
-cat << EOF > /etc/profile.d/maven.sh
-M2_HOME=/opt/apache-maven-3.0.5
-export M2_HOME
-
-M2=\$M2_HOME/bin
-export M2
-
-PATH=\$M2:$PATH
-export PATH
-
-MAVEN_OPTS="-Xms1024m -Xmx4096m -XX:MaxPermSize=1024m"
-export MAVEN_OPTS
-EOF
-
+rpm -Uvh /opt/jdk-7u45-linux-i586.rpm

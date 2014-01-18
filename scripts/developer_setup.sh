@@ -26,36 +26,38 @@
 set -e
 set -x
 
-if [ -f /etc/stratos_developer_provisioned_date ]
+if [ -f /etc/developer_provisioned_date ]
 then
    echo "Stratos developer already provisioned so exiting."
    exit 0
 fi
 
-STRATOS_SRC=/home/vagrant/incubator-stratos
+SVN_URL=https://svn.wso2.org/repos/wso2/carbon/platform/tags/turing-chunk05
+
+CARBON_SRC=/home/vagrant/carbon-source
 
 MAVEN_SETTINGS=/vagrant/maven_settings.xml
 
 ############################
-# checkout and build stratos
+# checkout and build carbon
 ############################
 
-yum install -y git java-1.7.0-openjdk-devel
+yum install -y subversion
 
-if [ -d $STRATOS_SRC ]; 
+if [ -d $CARBON_SRC ]; 
 then
    # TODO should we do an update?
-   echo 'Found stratos src folder.  Not updating git.'
+   echo 'Found carbon src folder.  Not updating src.'
 else
    sudo -i -u vagrant \
-      git clone https://git-wip-us.apache.org/repos/asf/incubator-stratos.git \
-      $STRATOS_SRC
+      svn checkout $SVN_URL \
+      $CARBON_SRC
 fi
 
 sudo -i -u vagrant \
-   $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
+   $M2_HOME/bin/mvn -B -f $CARBON_SRC/product-releases/chunk-05/pom.xml \
    -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_clean_install.log \
+   -l /vagrant/log/mvn_clean_install.log \
    -Dmaven.test.skip=true \
    clean install
 
@@ -66,9 +68,10 @@ sudo -i -u vagrant \
 # perform mvn eclipse:eclipse
 
 sudo -i -u vagrant \
-   $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
+   $M2_HOME/bin/mvn -B -f $CARBON_SRC/product-releases/chunk-05/pom.xml \
    -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_eclipse_eclipse.log \
+   -l /vagrant/log/mvn_eclipse_eclipse.log \
+   -D downloadSources=true
    eclipse:eclipse 
 
 # we need an eclipse plugin that will perform the headless import
@@ -81,7 +84,7 @@ sudo -i -u vagrant \
 # get all the directories that can be imported into eclipse and append them
 # with '-import'
 
-IMPORTS=$(find /home/vagrant/incubator-stratos/ -type f -name .project)
+IMPORTS=$(find ${CARBON_SRC} -type f -name .project)
 
 # Although it is possible to import multiple directories with one 
 # invocation of the test.myapp.App, this fails if one of the imports
@@ -101,25 +104,11 @@ done
 # add the M2_REPO variable to the workspace
 
 sudo -i -u vagrant \
-   $M2_HOME/bin/mvn -B -f $STRATOS_SRC/pom.xml \
+   $M2_HOME/bin/mvn -B -f $CARBON_SRC/pom.xml \
    -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_eclipse_configure_workspace.log \
+   -l /vagrant/log/mvn_eclipse_configure_workspace.log \
    -Declipse.workspace=/home/vagrant/workspace/ \
    eclipse:configure-workspace
 
-######################################################
-# FIXME
-# hack to build cloud controller distribution
-# https://github.com/snowch/vagrant-packstack/issues/1 
-######################################################
 
-sudo -i -u vagrant \
-   $M2_HOME/bin/mvn -B \
-   -f $STRATOS_SRC/products/cloud-controller/modules/distribution/pom.xml \
-   -s $MAVEN_SETTINGS \
-   -l /vagrant/log/stratos_mvn_install.log \
-   -Dmaven.test.skip=true \
-   install
-
-
-date > /etc/stratos_developer_provisioned_date 
+date > /etc/developer_provisioned_date 

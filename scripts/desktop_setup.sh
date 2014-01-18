@@ -83,48 +83,6 @@ fi
 chown vagrant:vagrant /home/vagrant/Desktop
 
 ##############################
-# Openstack dashboard launcher
-##############################
-
-
-cat << EOF > /home/vagrant/Desktop/openstack.desktop
-#!/usr/bin/env xdg-open
-
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Exec=firefox %u http://localhost/dashboard
-Icon=firefox
-Terminal=false
-Type=Application
-StartupWMClass=Firefox-bin
-MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;
-StartupNotify=true
-X-Desktop-File-Install-Version=0.15
-Categories=Network;WebBrowser;
-GenericName[en_US.UTF-8]=Openstack Dashboard
-Comment[en_US.UTF-8]=Openstack Dashboard
-Name[en_US]=Openstack Dashboard
-EOF
-
-chown vagrant:vagrant /home/vagrant/Desktop/openstack.desktop
-chmod 770 /home/vagrant/Desktop/openstack.desktop
-
-# Dashboard username and password
-
-DASHBOARD_PASSWORD=$(grep 'CONFIG_KEYSTONE_ADMIN_PW' /root/packstack-answers-*.txt | cut -d '=' -f 2)
-DASHBOARD_USERNAME='admin'
-
-cat << EOF > /home/vagrant/Desktop/Openstack_Dashboard_Password.txt
-Username: ${DASHBOARD_USERNAME}
-Password: ${DASHBOARD_PASSWORD}
-EOF
-
-# All Openstack Passwords
-
-grep 'PW' /root/packstack-answers-*.txt > /home/vagrant/Desktop/Openstack_Passwords.txt
-
-##############################
 # eclipse launcher
 ##############################
 
