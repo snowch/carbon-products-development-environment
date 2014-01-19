@@ -54,12 +54,14 @@ else
       $CARBON_SRC
 fi
 
+# must be build with tests - see:
+# http://wso2-oxygen-tank.10903.n7.nabble.com/Dev-Platform-build-failure-4-1-2-patch-release-td77798.html
 sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $CARBON_SRC/product-releases/chunk-05/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/mvn_clean_install.log \
-   -Dmaven.test.skip=true \
-   clean install
+   clean install \
+   --fail-never
 
 #####################
 # maven eclipse setup
@@ -71,7 +73,7 @@ sudo -i -u vagrant \
    $M2_HOME/bin/mvn -B -f $CARBON_SRC/product-releases/chunk-05/pom.xml \
    -s $MAVEN_SETTINGS \
    -l /vagrant/log/mvn_eclipse_eclipse.log \
-   -D downloadSources=true
+   -D downloadSources=true \
    eclipse:eclipse 
 
 # we need an eclipse plugin that will perform the headless import
