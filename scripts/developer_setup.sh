@@ -94,6 +94,7 @@ IMPORTS=$(find ${CARBON_SRC} -type f -name .project)
 for item in ${IMPORTS[*]}; 
 do 
    IMPORT="$(dirname $item)/"
+   echo "Importing ${IMPORT}"
 
    # perform the import
    sudo -i -u vagrant \
