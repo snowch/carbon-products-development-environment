@@ -1,13 +1,18 @@
-Stratos Developer Tools
-=======================
+Carbon Platform Developer Environment
+=====================================
 
-The aim of this project is to provide tools for developers working on 
-Apache Stratos to quickly set up development environments.  This project 
-uses Vagrant and bash shell scripts to automatically provision there environment.
+The aim of this project is to automate setting up development environments for Carbon 
+Products.
 
-The setup uses shell scripts because the scripts pretty much mirror the manual setup instructions for stratos.  Therefore, the manual setup instructions can be followed, but the setup can be automated.  This will be more beneficial to users who are new to stratos.
+In essence, this project:
 
-This project is a work-in-progress.  There is still much to be done to configure the environments to work with each other.
+- creates a CentOS guest
+- sets up up XRDP remote desktop server
+- sets up up maven, subversion, java
+- checks out carbon source
+- performs mvn clean install
+- performs mvn eclipse:eclipse
+- creates an eclipse workspace and imports the projects 
 
 Prerequisites
 -------------
@@ -19,73 +24,38 @@ It is recommended to install the vagrant plugins using **vagrant plugin install 
 
 - ```vagrant plugin install vagrant-cachier```
 - ```vagrant plugin install vagrant-vbguest```
+- ```vagrant plugin install vagrant-triggers```
 
 Issues
 ------
 Proxy support is untested and not documented.  If you are working behind a proxy, 
 please let me know and I can focus on improving proxy support.
 
-Stratos Development Environment
--------------------------------
-Vagrant provisions this environment from a CentOS 6.4 base image and some fairly
-crude bash shell scripts that:
+Usage
+=====
 
-- install the CentOS desktop environment
-- install git
-- install maven
-- checkout the stratos source
-- build the stratos source
-- install eclipse
-- import the stratos source into eclipse
+Checkout this project, e.g. 
 
-The scripts are fairly easy to understand.  They can be found here:
+```$ git clone https://github.com/snowch/carbon-products-development-environment```
 
-     scripts/create_folders.sh
-     scripts/maven_setup.sh
-     scripts/desktop_setup.sh
-     scripts/stratos_developer_setup.sh
+Change into the project directory, e.g.
 
-To start the development environment, checkout the git repo, change to the directory
-containing the Vagrantfile and run ```vagrant up stratosdev```.  This will
-take quiet some time and downloads quite a lot of data.
+```cd carbon-products-development-environment```
 
-After the virtual machine has started up, you can connect to it using 
-Microsoft Remote Desktop Connection or rdesktop on Linux or Mac OS/X
+Start the guest machine, e.g.
 
-- **Host**: localhost
-- **Port**: 4480
-- **Username**: vagrant
-- **Password**: vagrant
+```vagrant up```
 
-On the desktop is an Eclipse icon.  Double click to open.  
-The eclipse workspace is setup with all Stratos eclipse projects imported.  
-After opening, wait for the workspace to finish building.  
-You can see the build status in the bottom right of the 
-eclipse window.  After building in eclipse, there should be no build errors.
+Wait.  Wait.  Wait.  Checking out the source and building it can easily take 12 hours or more.
 
+Description
+===========
 
-Stratos Runtime
----------------
+The environment is setup with shell scripts.
 
-Note: work on setting up the runtime has only just started. 
+The scripts are executed in the order they are found in the Vagrantfile.  Scripts are
+executed by this statement:
 
-The following scripts have been completed for setting up the runtime:
+```carbon.vm.provision "shell", path: "scriptpath/scriptname.sh"```
 
-  - scripts/stratos_runtime_setup.sh
-  - scripts/stratos_mb_setup.sh
-  - scripts/stratos_cep_setup.sh
-
-TODO: scripts will be required for all the other stratos components
-
-
-Openstack
----------
-
-This environment is a CentOS 6.4 image that gets provisioned with openstack
-using the **packstack --allinone** installer.  
-See here: http://openstack.redhat.com/Quickstart
-
-Openstack is setup with this script:
-
-  - scripts/openstack_setup.sh
-
+The scripts can be found in the ```scripts``` folder.
