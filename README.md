@@ -41,7 +41,7 @@ wait for me, you can try the instructions for setting up a proxy, as described h
 https://github.com/tmatilai/vagrant-proxyconf
 
 Usage
-=====
+-----
 
 Checkout this project, e.g. 
 
@@ -55,7 +55,7 @@ Start the guest machine, e.g.
 
 ```vagrant up```
 
-Wait.  Wait.  Wait.  Checking out the source and building it can easily take 12 hours or more.
+Wait.  Wait.  Wait.  Checking out the source and building it can easily take a few hours or more to finish.
 
 When you see:
 
@@ -81,7 +81,7 @@ Remote Desktop details:
 
 
 Description
-===========
+-----------
 
 The environment is setup with shell scripts.
 
@@ -91,3 +91,12 @@ executed by this statement:
 ```carbon.vm.provision "shell", path: "scriptpath/scriptname.sh"```
 
 The scripts can be found in the ```scripts``` folder.
+
+Screenshot
+----------
+
+After ```vagrant up``` has completed, you can open eclipse using the desktop icon. Your environment is setup for you.  Eclipse will be trying to build.
+
+Also shown is ```mvn clean install``` typed into a shell window.  Nothing else needed to be done except open the Terminal (under System Tools).
+
+![alt tag](https://raw2.github.com/snowch/carbon-products-development-environment/ac772ce9ad83e33319486a4c84500946c24c5633/doc/eclipse_screenshot.png)
