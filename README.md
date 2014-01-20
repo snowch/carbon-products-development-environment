@@ -10,8 +10,8 @@ In essence, this project:
 - sets up up XRDP remote desktop server
 - sets up up maven, subversion, java
 - checks out carbon source
-- performs mvn clean install
-- performs mvn eclipse:eclipse
+- performs mvn clean install (on chunk-05)
+- performs mvn eclipse:eclipse (on chunk-05)
 - creates an eclipse workspace and imports the projects 
 
 Prerequisites
@@ -29,7 +29,10 @@ It is recommended to install the vagrant plugins using **vagrant plugin install 
 Issues
 ------
 Proxy support is untested and not documented.  If you are working behind a proxy, 
-please let me know and I can focus on improving proxy support.
+please let me know and I can focus on improving proxy support.  If you don't want to
+wait for me, you can try the instructions for setting up a proxy, as described here:
+
+https://github.com/tmatilai/vagrant-proxyconf
 
 Usage
 =====
@@ -48,7 +51,18 @@ Start the guest machine, e.g.
 
 Wait.  Wait.  Wait.  Checking out the source and building it can easily take 12 hours or more.
 
-Use a Remote Desktop Client to connect to the machine from the host, e.g.
+When you see:
+
+```
+******************************************************************************************
+* FINISHED SETTING UP DEVELOPMENT ENVIRONMENT - Performing 'vagrant reload' to reboot    *
+******************************************************************************************
+[carbon] Configuring cache buckets...
+[carbon] Running triggers after action...
+[carbon] Executing command "vagrant reload"...
+```
+
+... you can use a Remote Desktop Client to connect to the machine from the host, e.g.
 
 - Windows: Remote Desktop Client, set Computer: ```localhost:4480```
 - Linux: ```rdesktop localhost:4480```

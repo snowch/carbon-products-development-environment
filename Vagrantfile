@@ -124,9 +124,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      # setup carbon development environment
      carbon.vm.provision "shell", path: "scripts/create_folders.sh"
      carbon.vm.provision "shell", path: "scripts/maven_setup.sh"
+
+     # FIXME this will re-download the jdk each time
      carbon.vm.provision "shell", path: "scripts/java-oraclejdk-1.6.sh"
      carbon.vm.provision "shell", path: "scripts/desktop_setup.sh"
      carbon.vm.provision "shell", path: "scripts/developer_setup.sh"
+
+$script = <<SCRIPT
+echo "******************************************************************************************"
+echo "* FINISHED SETTING UP DEVELOPMENT ENVIRONMENT - Performing 'vagrant reload' to reboot    *"
+echo "******************************************************************************************"
+SCRIPT
+
+     carbon.vm.provision "shell", inline: $script
 
      # restart the box - FIXME this only really needs to happen after
      # the first provisioning run, not after every provision run
