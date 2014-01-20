@@ -26,6 +26,12 @@ It is recommended to install the vagrant plugins using **vagrant plugin install 
 - ```vagrant plugin install vagrant-vbguest```
 - ```vagrant plugin install vagrant-triggers```
 
+This project has been tested with 6GB memory settings.  If you want to try with
+lower memory requirements, try changing this line in the Vagrantfile:
+
+```vb.customize ["modifyvm", :id, "--memory", "6144"]```
+
+
 Issues
 ------
 Proxy support is untested and not documented.  If you are working behind a proxy, 
