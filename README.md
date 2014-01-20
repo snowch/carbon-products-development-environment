@@ -53,6 +53,13 @@ Use a Remote Desktop Client to connect to the machine from the host, e.g.
 - Windows: Remote Desktop Client, set Computer: ```localhost:4480```
 - Linux: ```rdesktop localhost:4480```
 
+Remote Desktop details:
+
+- Hostname: localhost:8080
+- Username: vagrant
+- Password: vagrant
+
+
 Description
 ===========
 
