@@ -100,3 +100,12 @@ After ```vagrant up``` has completed, you can open eclipse using the desktop ico
 Also shown is ```mvn clean install``` typed into a shell window.  Nothing else needed to be done except open the Terminal (under System Tools).
 
 ![alt tag](https://raw2.github.com/snowch/carbon-products-development-environment/ac772ce9ad83e33319486a4c84500946c24c5633/doc/eclipse_screenshot.png)
+
+How to remove
+-------------
+
+The nice thing about Vagrant is that it will not mess with your existing java environment.  When you have had enough of the development environment, all you need to do to remove is the following:
+
+- Perform ```vagrant destroy``` from the same directory that you ran ```vagrant up```.
+- Uninstall Vagrant
+- Uninstall Virtualbox
