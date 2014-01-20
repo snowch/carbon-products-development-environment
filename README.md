@@ -49,13 +49,12 @@ lower memory requirements, try changing this line in the Vagrantfile:
 
 Issues
 ------
-1) Proxy support is untested and not documented.  If you are working behind a proxy, 
+- Proxy support is untested and not documented.  If you are working behind a proxy, 
 please let me know and I can focus on improving proxy support.  If you don't want to
-wait for me, you can try the instructions for setting up a proxy, as described here:
-
-https://github.com/tmatilai/vagrant-proxyconf
-
-2) There are a number of build errors in eclipse.
+wait for me, you will need to do both of these:
+   - follow the instructions for setting up a proxy, as described https://github.com/tmatilai/vagrant-proxyconf
+   - update the maven_settings.xml in the checked out folder with your proxy settings
+- There are a number of build errors in eclipse.
 
 Usage
 -----
