@@ -1,5 +1,5 @@
-Carbon Platform Developer Environment
-=====================================
+WSO2 Carbon Platform Developer Environment
+==========================================
 
 The aim of this project is to automate setting up development environments for Carbon 
 Products.
