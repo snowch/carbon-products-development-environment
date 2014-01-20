@@ -15,7 +15,7 @@ In essence, this project:
 - creates an eclipse workspace and imports the projects
 
 Quick Start Example (linux)
----------------------------
+===========================
 ```
 $ git clone https://github.com/snowch/carbon-products-development-environment
 $ cd carbon-products-development-environment
@@ -26,6 +26,8 @@ $ vagrant up
 $ rdesktop -u vagrant -p vagrant localhost:4480
 ```
 
+Detailed Instructions
+=====================
 
 Prerequisites
 -------------
