@@ -12,7 +12,20 @@ In essence, this project:
 - checks out carbon source
 - performs mvn clean install (on chunk-05)
 - performs mvn eclipse:eclipse (on chunk-05)
-- creates an eclipse workspace and imports the projects 
+- creates an eclipse workspace and imports the projects
+
+Quick Start Example (linux)
+---------------------------
+```
+$ git clone https://github.com/snowch/carbon-products-development-environment
+$ cd carbon-products-development-environment
+$ vagrant plugin install vagrant-cachier
+$ vagrant plugin install vagrant-vbguest
+$ vagrant plugin install vagrant-triggers
+$ vagrant up
+$ rdesktop -u vagrant -p vagrant localhost:4480
+```
+
 
 Prerequisites
 -------------
@@ -34,11 +47,13 @@ lower memory requirements, try changing this line in the Vagrantfile:
 
 Issues
 ------
-Proxy support is untested and not documented.  If you are working behind a proxy, 
+1) Proxy support is untested and not documented.  If you are working behind a proxy, 
 please let me know and I can focus on improving proxy support.  If you don't want to
 wait for me, you can try the instructions for setting up a proxy, as described here:
 
 https://github.com/tmatilai/vagrant-proxyconf
+
+2) There are a number of build errors in eclipse.
 
 Usage
 -----
