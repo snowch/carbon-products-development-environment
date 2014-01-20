@@ -70,19 +70,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   ###########################################
   #
-  # Stratos Development machine
+  # Carbon Development machine
   #
   ###########################################
 
-  config.vm.define "stratosdev" do |stratosdev|
+  config.vm.define "carbon" do |carbon|
 
      # The host machine can use Remote Desktop Connection (windows) or
      # rdesktop (linux/osx) to connect to localhost:4480 the username
      # and password is vagrant/vagrant
 
-     stratosdev.vm.network "forwarded_port", guest: 3389, host: 4480
+     carbon.vm.network "forwarded_port", guest: 3389, host: 4480
 
-     stratosdev.vm.provider :virtualbox do |vb|
+     carbon.vm.provider :virtualbox do |vb|
 
         vb.customize ["modifyvm", :id, "--memory", "6144"]
         vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
@@ -114,23 +114,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      # Maven synced folder - speeds up repeated builds because
      # the m2 repo acts as a cache
 
-     stratosdev.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
+     carbon.vm.synced_folder File.expand_path("~/.vagrant.d/.m2"),
 	"/home/vagrant/.m2/", 
         :create => true,
 	:mount_option => "dmode=777,fmode=666"
 
-     stratosdev.vm.provision "shell", path: "scripts/add_new_disk.sh"
+     carbon.vm.provision "shell", path: "scripts/add_new_disk.sh"
 
      # setup carbon development environment
-     stratosdev.vm.provision "shell", path: "scripts/create_folders.sh"
-     stratosdev.vm.provision "shell", path: "scripts/maven_setup.sh"
-     stratosdev.vm.provision "shell", path: "scripts/java-oraclejdk-1.6.sh"
-     stratosdev.vm.provision "shell", path: "scripts/desktop_setup.sh"
-     stratosdev.vm.provision "shell", path: "scripts/developer_setup.sh"
+     carbon.vm.provision "shell", path: "scripts/create_folders.sh"
+     carbon.vm.provision "shell", path: "scripts/maven_setup.sh"
+     carbon.vm.provision "shell", path: "scripts/java-oraclejdk-1.6.sh"
+     carbon.vm.provision "shell", path: "scripts/desktop_setup.sh"
+     carbon.vm.provision "shell", path: "scripts/developer_setup.sh"
 
      # restart the box - FIXME this only really needs to happen after
      # the first provisioning run, not after every provision run
-     stratosdev.trigger.after :provision, :execute => "vagrant reload"
+     carbon.trigger.after :provision, :execute => "vagrant reload"
 
   end
 
