@@ -84,7 +84,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
      carbon.vm.provider :virtualbox do |vb|
 
-        vb.customize ["modifyvm", :id, "--memory", "6144"]
+        vb.customize ["modifyvm", :id, "--memory", "4096"]
         vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
 
         # FIXME: Find/Create a base box with a larger drive
@@ -111,6 +111,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
      end
 
+
      # Maven synced folder - speeds up repeated builds because
      # the m2 repo acts as a cache
 
@@ -128,7 +129,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      # FIXME this will re-download the jdk each time
      carbon.vm.provision "shell", path: "scripts/java-oraclejdk-1.6.sh"
      carbon.vm.provision "shell", path: "scripts/desktop_setup.sh"
-     carbon.vm.provision "shell", path: "scripts/developer_setup.sh"
+
+     turing_chunk_version = File.read("./turing-chunk-version")
+     carbon.vm.provision "shell", 
+                   path: "scripts/developer_setup.sh",
+                   args: [ "#{turing_chunk_version}" ]
 
 $script = <<SCRIPT
 echo "******************************************************************************************"
