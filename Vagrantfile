@@ -27,8 +27,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "centos64"
-  config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210.box"
+  config.vm.box = "centos64-bento"
+  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.4_chef-provisionerless.box"
 
   ###############
   # PLUGIN CONFIG
@@ -87,28 +87,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["modifyvm", :id, "--memory", "4096"]
         vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
 
-        # FIXME: Find/Create a base box with a larger drive
-        # The CentOS image has insufficient space, so lets add
-        # another drive until we create a new box. 
-
-        file_to_disk = File.realpath( "." ).to_s + "/disk.vdi"
-
-        if ARGV[0] == "up" && ! File.exist?(file_to_disk) 
-           puts "Creating 30GB disk #{file_to_disk}."
-           vb.customize [
-                'createhd', 
-                '--filename', file_to_disk, 
-                '--format', 'VDI', 
-                '--size', 300000 * 1024 # 30 GB
-                ] 
-           vb.customize [
-                'storageattach', :id, 
-                '--storagectl', 'SATA Controller', 
-                '--port', 1, '--device', 0, 
-                '--type', 'hdd', '--medium', 
-                file_to_disk
-                ]
-        end
      end
 
 
@@ -119,8 +97,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	"/home/vagrant/.m2/", 
         :create => true,
 	:mount_option => "dmode=777,fmode=666"
-
-     carbon.vm.provision "shell", path: "scripts/add_new_disk.sh"
 
      # setup carbon development environment
      carbon.vm.provision "shell", path: "scripts/create_folders.sh"
